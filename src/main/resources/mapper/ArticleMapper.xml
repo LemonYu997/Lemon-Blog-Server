@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lemonyu997.top.lemonapi.mapper.ArticleMapper">
+
+    <!--自定义封装分页查询的返回结果-->
+    <resultMap id="articleMap" type="lemonyu997.top.lemonapi.pojo.Article">
+        <id column="id" property="id" />
+        <result column="firstpicture" property="firstpicture" />
+        <result column="title" property="title" />
+        <result column="summary" property="summary" />
+        <result column="body_id" property="bodyId" />
+        <result column="author_id" property="authorId" />
+        <result column="category_id" property="categoryId" />
+        <result column="comment_counts" property="commentCounts" />
+        <result column="view_counts" property="viewCounts" />
+        <result column="weight" property="weight" />
+        <result column="create_date" property="createDate" />
+    </resultMap>
+
+    <!--查询总字数-->
+    <select id="getAllWordCounts" resultType="java.lang.Long">
+        select SUM(word_counts) from t_article
+    </select>
+
+    <!--分页查询，根据对应条件返回对应的结果-->
+    <select id="listArticle" resultMap="articleMap">
+        select * from t_article
+        <where>
+            1 = 1
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+            <if test="tagId != null">
+                and id in (select article_id from t_article_tag where tag_id = #{tagId})
+            </if>
+            <if test="year != null and year.length > 0 and month != null and month.length > 0">
+                and (FROM_UNIXTIME(create_date/1000, '%Y') = #{year} and FROM_UNIXTIME(create_date/1000, '%m') = #{month} )
+            </if>
+        </where>
+        order by create_date desc
+    </select>
+
+    <!--首页展示用的文章归档信息，根据年月分组，得到对应的篇数-->
+    <select id="getArchiveInfoList" resultType="lemonyu997.top.lemonapi.vo.ArchiveVO">
+        select year(FROM_UNIXTIME(create_date/1000)) as year, month(FROM_UNIXTIME(create_date/1000)) as month, count(*) as count from t_article
+        group by year, month
+        order by month desc
+    </select>
+
+    <!--根据时间获得文章的数量-->
+    <select id="countArticleByTime" resultType="java.lang.Integer" parameterType="int">
+        select count(*) from t_article where (FROM_UNIXTIME(create_date/1000, '%Y') = #{year} and FROM_UNIXTIME(create_date/1000, '%m') = #{month} )
+    </select>
+
+    <!--查询总浏览量，实际没用到-->
+<!--    <select id="getAllViewCounts" resultType="java.lang.Long">-->
+<!--        select SUM(view_counts) from t_article-->
+<!--    </select>-->
+</mapper>

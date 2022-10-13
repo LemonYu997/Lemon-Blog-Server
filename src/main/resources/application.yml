@@ -1,0 +1,58 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: lemon_blog
+  mvc:
+    # 请求前缀
+    servlet:
+      path: /api
+  # 配置数据库
+  datasource:
+    url: jdbc:mysql://101.43.208.158:3307/lemon?characterEncoding=utf8&useUnicode=true&serverTimezone=UTC
+    username: root
+    password: daohaodeshisb
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    dbcp2:
+      # 初始化、最小、最大连接数
+      initial-size: 5
+      min-idle: 5
+      max-idle: 20
+      # 获取数据库连接的等待时间
+      max-wait-millis: 60000
+      # 配置多久进行检测，检测要关闭的空闲连接
+      time-between-eviction-runs-millis: 60000
+  redis:
+    host: 101.43.208.158
+    port: 6379
+    connect-timeout: 10000
+    password: daohaodeshisb
+  servlet:
+    multipart:
+      # 文件上传最大，默认1M
+      max-file-size: 2MB
+      # 请求大小不超过20MB
+      max-request-size: 20MB
+  profiles:
+    active: prod
+
+# 配置mybatis-plus
+mybatis-plus:
+  global-config:
+    db-config:
+      # 声明数据库中表的前缀
+      table-prefix: t_
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 配置SQL执行超时时间
+    default-statement-timeout: 20
+
+qiniu:
+  # 七牛云的测试域名，每30天要重新设置
+  url: http://r8q0yjvnx.hn-bkt.clouddn.com/
+  accessKey: JclvvFGTBcAMIyOSxwWleE8bsBDWsZVDsy2h0M3M
+  secretKey: eO2cRqFBPV3146MitKLhwku1_bIh2lDfL0w285JC
+
+
+

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lemonyu997.top.lemonapi.mapper.CategoryMapper">
+
+    <!--根据分类id查询-->
+    <select id="countArticleByCategoryId" parameterType="int" resultType="int">
+        select count(*) from t_article where category_id = #{categoryId}
+    </select>
+</mapper>
